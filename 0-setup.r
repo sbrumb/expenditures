@@ -6,6 +6,7 @@ library(modelr)
 library(viridis)
 library(cowplot)
 library(scales)
+library(ggmap)
 library(extrafont)
 
 # Spatial analysis
@@ -37,9 +38,9 @@ theme_sb <- theme_void() +
   )
 
 theme_sbmap <- theme_void() +
-  theme(text = element_text(family = "Lato", size = 8),
-        plot.title = element_text(size = 10),
-        legend.title = element_text(size = 8),
+  theme(text = element_text(family = "Lato", size = 7),
+        plot.title = element_text(size = 7),
+        legend.title = element_text(size = 7),
         legend.key.width = unit(.1, "in"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()

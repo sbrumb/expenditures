@@ -4,9 +4,9 @@
 temp <- list()
 states <- unique(fips_codes$state)[1:51]
 for (state in states) {
-      # temp[[state]] <- get_acs(geography = "tract", variables = "B01003_001",
-    #        state = state, geometry = TRUE)
-     temp[[state]]$geometry <- temp[[state]]$geometry %>% st_cast("MULTIPOLYGON")
+  # temp[[state]] <- get_acs(geography = "tract", variables = "B01003_001",
+  #        state = state, geometry = TRUE)
+  temp[[state]]$geometry <- temp[[state]]$geometry %>% st_cast("MULTIPOLYGON")
 }
 tract_test <- lapply(temp, function(x) as(x, "Spatial"))
 tract_sp <- do.call(rbind, tract_test)
@@ -44,7 +44,7 @@ tod_map <- transit %>%
            map = usa, data = usa, fill = "gray90", color = "white", size = .25) +
   coord_map("albers", parameters = c(39, 45)) +
   geom_jitter(aes(x = Longitude, y = Latitude, color = as.factor(Agency)),
-             cex = .1, show.legend = FALSE, width = .1, height = .1) +
+              cex = .1, show.legend = FALSE, width = .1, height = .1) +
   scale_color_viridis(discrete = TRUE, option = "plasma") +
   scale_x_continuous(expand = c(0,0)) +
   scale_y_continuous(expand = c(0,0)) +
