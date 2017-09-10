@@ -19,6 +19,7 @@ library(tidycensus)
 # Utility
 library(stringr)
 library(foreign)
+library(data.table)
 
 options(tigris_use_cache = TRUE)
 census_api_key('31b071508a01c82ee7be49c0dd16a45a6c2689e6', install = TRUE)

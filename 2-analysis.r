@@ -1,16 +1,23 @@
 # Get simple features for Census tracts in every state
-states <- unique(fips_codes$state)[2:51]
-tract_test <- get_acs(geography = "tract", variables = "B01003_001",state = "AL", geometry = TRUE)
+# (migrate from data.frame eventually)
 
+temp <- list()
+states <- unique(fips_codes$state)[1:51]
 for (state in states) {
-  yay <- get_acs(geography = "tract", variables = "B01003_001", 
-          state = state, geometry = TRUE)
-  tract_test <- rbind(yay, tract_test)
+      # temp[[state]] <- get_acs(geography = "tract", variables = "B01003_001",
+    #        state = state, geometry = TRUE)
+     temp[[state]]$geometry <- temp[[state]]$geometry %>% st_cast("MULTIPOLYGON")
 }
+tract_test <- lapply(temp, function(x) as(x, "Spatial"))
+tract_sp <- do.call(rbind, tract_test)
 
 transit <- read_csv("data/tod_database_download.csv") %>%
   mutate(year = as.factor(`Year Opened`),
-         id = row_number())
+         id = row_number()) %>%
+  filter(!is.na(year))
+
+transit <- transit %>%
+  filter(!is.na(year))
 
 usa <- map_data("state")
 usa_map <- map("state", fill = TRUE)
@@ -23,11 +30,13 @@ transit_sp <- SpatialPoints(coords = transit_coords)
 transit_over <- over(transit_sp, usa_sp)
 transit$state <- IDs[transit_over]
 
-tracts_sp <- as(tract_test, "Spatial")
 proj4string(transit_sp) <- proj4string(tracts_sp)
-
-test <- over(transit_sp, tracts_sp)
+test <- over(transit_sp, tract_sp)
 transit$tract <- test$NAME
+summary(as.factor(transit$tract))
+
+transit_no <- transit %>%
+  filter(tract == "Census Tract 106, Multnomah County, Oregon")
 
 tod_map <- transit %>%
   ggplot() +
@@ -60,10 +69,10 @@ tod_map3 <- dc_tracts %>%
   scale_y_continuous(limits = c(dc_bbox[["ymin"]], dc_bbox[["ymax"]])) +
   theme_sbmap
 
-ggsave(plot = tod_map3, "~/dissertation/figures/tod3.png", width = 6.5, height = 4)
+ggsave(plot = tod_map3, "~/dissertation/figures/tod_dc.png", width = 6.5, height = 4)
 
 sld_source <- read.dbf("SmartLocationDb.dbf")
-dc_sld_source <- sld_source %>% filter(SFIPS == 11) 
+dc_sld_source <- sld_source %>% filter(SFIPS == 11)
 
 rm(sld_source)
 
@@ -87,7 +96,7 @@ dc_map1 <- dc_bg %>%
                      labels = comma) +
   coord_map("polyconic") +
   labs(title = "Jobs Accessible in a 45-Minute Drive",
-       fill = "Jobs") + 
+       fill = "Jobs") +
   theme_sbmap
 
 dc_map2 <- dc_bg %>%
