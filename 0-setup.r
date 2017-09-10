@@ -3,7 +3,6 @@ library(tidyverse)
 library(modelr)
 
 # Visualization
-library(ggthemes)
 library(viridis)
 library(cowplot)
 library(scales)
