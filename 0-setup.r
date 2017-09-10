@@ -1,15 +1,28 @@
+# Tidyverse
 library(tidyverse)
-library(foreign)
-library(maps)
-library(tigris)
+library(modelr)
+
+# Visualization
 library(ggthemes)
 library(viridis)
 library(cowplot)
-library(extrafont)
 library(scales)
-library(reshape)
+library(extrafont)
+
+# Spatial analysis
+library(maps)
+library(maptools)
+library(sp)
+library(sf)
+library(tigris)
+library(tidycensus)
+
+# Utility
 library(stringr)
-library(modelr)
+library(foreign)
+
+options(tigris_use_cache = TRUE)
+census_api_key('31b071508a01c82ee7be49c0dd16a45a6c2689e6', install = TRUE)
 
 theme_sb <- theme_void() +
   theme(

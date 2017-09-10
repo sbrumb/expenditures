@@ -1,35 +1,20 @@
-source("common.R")
-
-library(sp)
-library(maps)
-library(maptools)
-library(tidycensus)
-options(tigris_use_cache = TRUE)
-library(sf)
-census_api_key('31b071508a01c82ee7be49c0dd16a45a6c2689e6', install = TRUE)
-
-states <- unique(fips_codes$state)[1:51]
-
+# Get simple features for Census tracts in every state
 states <- unique(fips_codes$state)[2:51]
 tract_test <- get_acs(geography = "tract", variables = "B01003_001",state = "AL", geometry = TRUE)
 
-for(state in states) {
+for (state in states) {
   yay <- get_acs(geography = "tract", variables = "B01003_001", 
           state = state, geometry = TRUE)
   tract_test <- rbind(yay, tract_test)
 }
 
-transit <- read_csv("~/Downloads/tod_database_download.csv")
-transit <- transit %>%
+transit <- read_csv("data/tod_database_download.csv") %>%
   mutate(year = as.factor(`Year Opened`),
-         id = row_number()) %>%
-  filter(Longitude >= -140,
-         Latitude > 20,
-         !is.na(year))
+         id = row_number())
 
 usa <- map_data("state")
-
 usa_map <- map("state", fill = TRUE)
+
 IDs <- sapply(strsplit(usa_map$names, ":"), function(x) x[1])
 usa_sp <- map2SpatialPolygons(usa_map, IDs = IDs)
 
@@ -59,7 +44,6 @@ tod_map <- transit %>%
 
 # ggsave(plot = tod_map, "~/dissertation/figures/tod.png", width = 6.5, height = 4)
 
-library(sf)
 dc_tracts <- tracts("DC")
 dc_tracts <- st_as_sf(dc_tracts)
 transit2 <- st_as_sf(x = transit, coords = c("Longitude", "Latitude"))
@@ -131,5 +115,5 @@ dc_combined <- plot_grid(dc_map1, dc_map2) +
         plot.caption = element_text(margin = margin(t = 0)),
         plot.margin = unit(c(.1, .1, .1, .1), "in"))
 
-ggsave(plot = dc_combined, file = "~/dissertation/figures/sld.pdf", width = 6.5, height = 3.5, device = cairo_pdf)
-ggsave(plot = dc_combined, file = "~/dissertation/figures/sld.png", width = 6.5, height = 3.5)
+ggsave(plot = dc_combined, file = "plots/sld.pdf", width = 6.5, height = 3.5, device = cairo_pdf)
+ggsave(plot = dc_combined, file = "plots/sld.png", width = 6.5, height = 3.5)
