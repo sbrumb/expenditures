@@ -71,10 +71,10 @@ tod_map3 <- dc_tracts %>%
 
 ggsave(plot = tod_map3, "~/dissertation/figures/tod_dc.png", width = 6.5, height = 4)
 
-sld_source <- read.dbf("SmartLocationDb.dbf")
-dc_sld_source <- sld_source %>% filter(SFIPS == 11)
+### SLD exploratory analysis
 
-rm(sld_source)
+sld_source <- read.dbf("data/SmartLocationDb.dbf")
+dc_sld_source <- sld_source %>% filter(SFIPS == 11)
 
 dc_bg <- block_groups("DC") %>%
   fortify(region = 'GEOID')
@@ -119,10 +119,12 @@ dc_combined <- plot_grid(dc_map1, dc_map2) +
   theme_sbmap +
   scale_x_continuous(expand = c(0,0)) +
   scale_y_continuous(expand = c(0,0)) +
-  theme(plot.title = element_text(size = 12,
+  theme(plot.title = element_text(size = 12, hjust = 0,
                                   margin = margin(b = 12, unit = "pt")),
         plot.caption = element_text(margin = margin(t = 0)),
-        plot.margin = unit(c(.1, .1, .1, .1), "in"))
+        plot.margin = unit(c(.1, .1, .1, .1), "in")) +
+  labs(title = "Job Accessibility in Washington DC by Transportation Mode, 2011",
+       caption = "Source: EPA Smart Location Database")
 
 ggsave(plot = dc_combined, file = "plots/sld.pdf", width = 6.5, height = 3.5, device = cairo_pdf)
-ggsave(plot = dc_combined, file = "plots/sld.png", width = 6.5, height = 3.5)
+ggsave(plot = dc_combined, file = "~/Pictures/accessibility.png", width = 6.5, height = 3)
