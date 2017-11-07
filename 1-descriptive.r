@@ -1,7 +1,10 @@
-ce <- read_csv('data/ce_summary.csv') %>%
+# Summary
+ce <- read_csv('data/ce/ce_summary.csv') %>%
   dplyr::rename(quintile = Quintile) %>%
   gather(category, amount, -quintile) %>%
-  mutate(quintile = str_wrap(quintile, 10)) 
+  mutate(quintile = str_wrap(quintile, 10))
+
+ce$quintile <- factor(ce$quintile, levels = unique(ce$quintile))
 
 ggplot(ce, aes(quintile, amount, fill = category)) +
   geom_col() +
@@ -20,11 +23,13 @@ ggplot(ce, aes(quintile, amount, fill = category)) +
   geom_col(position = position_fill()) +
   scale_fill_viridis(discrete = TRUE, name = NULL, option = "plasma",
                      begin = .35, end = .9) +
-  scale_y_continuous(labels = percent) + 
+  scale_y_continuous(labels = percent) +
   geom_text(aes(label = dollar(amount)), size = 2.5, family = "Lato",
             position = position_fill(vjust = 0.5)) +
   theme_sb +
   labs(x = NULL, y = NULL)
-  
+
 ggsave('plots/ce_share.pdf', width = 6.5, height = 3.5, device = cairo_pdf)
 ggsave('plots/ce_share.png', width = 6.5, height = 3.5)
+
+# Microdata

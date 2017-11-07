@@ -1,6 +1,9 @@
 # Get simple features for Census tracts in every state
 # (migrate from data.frame eventually)
 
+dc_popdens_block <- get_acs(geography = "block", variables = "B01001001", state = "DC",
+                            year = "2015", survey = "acs1")
+
 temp <- list()
 states <- unique(fips_codes$state)[1:51]
 for (state in states) {
