@@ -27,8 +27,8 @@ options(tigris_use_cache = TRUE)
 theme_sb <- theme_void() +
   theme(
     axis.ticks = element_blank(),
-    text = element_text(family = "Lato", size = 10),
-    axis.text = element_text(family = "Lato", size = 8),
+    text = element_text(family = "Gill Sans MT", size = 10),
+    axis.text = element_text(family = "Gill Sans MT", size = 8),
     panel.grid.minor = element_blank(),
     panel.grid.major.x = element_blank(),
     panel.grid.major.y = element_line(size = .25, color = 'gray'),
@@ -37,7 +37,7 @@ theme_sb <- theme_void() +
   )
 
 theme_sbmap <- theme_void() +
-  theme(text = element_text(family = "Lato", size = 7),
+  theme(text = element_text(family = "Gill Sans MT", size = 7),
         plot.title = element_text(size = 7),
         legend.title = element_text(size = 7),
         legend.key.width = unit(.1, "in"),
